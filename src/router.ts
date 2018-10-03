@@ -54,10 +54,18 @@ const knownMessageTypes = [
   "OrderPlacedNotification",
   "SubscriptionChangedNotification"];
 
-const errorCodes = {
+export const errorCodes = {
+  "invalid_json": "we could not parse the json of the message",
   "invalid_signature": "invalid signature for the incoming message",
   "missing_handler": "missing the handler to handle that notification",
   "unknown_message": "unknown message type received"
+};
+
+// used for handling errors related to non-specificed handlers in the handler object
+const missingHandlerError: IError = {
+  code: "missing_handler",
+  reason: errorCodes.missing_handler,
+  raw: {handler: ""}
 };
 
 /**
@@ -75,12 +83,18 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
       };
       return handlers.onError(validationError);
     }
-    const missingHandlerError: IError = {
-      code: "missing_handler",
-      reason: errorCodes.missing_handler,
-      raw: {handler: ""}
-    };
-    let message = JSON.parse(parsed.Message);
+    
+    let message: any = {}; 
+    try{
+      message = JSON.parse(parsed.Message);
+    } catch(er) {
+      const jsonError: IError = {
+        code: "invalid_json",
+        reason: errorCodes.invalid_json,
+        raw: er
+      };
+      return handlers.onError(jsonError);
+    }
     // there are a few ways this could get to us; we need to check
     // if the top key is default; if it is, the real message is a child
     // the same goes for email, http, or https

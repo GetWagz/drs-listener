@@ -1,4 +1,4 @@
-import { IHandlers, IOrderInfo, receiveRequest } from "./";
+import { IHandlers, IOrderInfo, errorCodes, receiveRequest } from "./";
 
 import { 
   constants,
@@ -8,7 +8,12 @@ import {
   orderPlacedNotification, 
   subscriptionChangedNotification,
   itemShippedNotification,
-  invalidSignatureNotification} from "./router.test.messages";
+  invalidJsonNotification,
+  invalidSignatureNotification,
+  allTargets,
+  httpOnly,
+  httpsOnly,
+  emailOnly} from "./router.test.messages";
 
 const allValidNotifications = [
   deviceDeregisteredNotification, 
@@ -203,5 +208,96 @@ describe("Invalid or missing calls", () => {
     for(const n of allValidNotifications){
       receiveRequest(n, h);
     }
+  });
+});
+
+describe("Bad JSON calls", () => {
+  test("call with bad JSON", (done) => {
+    const h: IHandlers = {
+      onError: (e: any) => {
+        expect(e).not.toBeNull();
+        expect(e).toHaveProperty("code");
+        expect(e).toHaveProperty("reason");
+        expect(e.code).toEqual("invalid_json");
+        expect(e.reason).toEqual(errorCodes[e.code]);
+        done();
+      }
+    };
+    receiveRequest(invalidJsonNotification, h);
+  });
+});
+
+describe("Test multiple level messages", () => {
+  test("test all targets", (done) => {
+    const h: IHandlers = {
+      onError: (e: any) => {
+        // this should not be called
+        expect(e).toBeNull();
+        done();
+      },
+      onDeviceRegistered: (customerId: string, modelId: string, serialNumber: string,  message: any) => {
+        expect(customerId).toEqual(constants.customerId);
+        expect(modelId).toEqual(constants.modelId);
+        expect(serialNumber).toEqual(constants.serial);
+        expect(message).not.toBeNull();
+        expect(message).not.toEqual({});
+        done();
+      }
+    };
+    receiveRequest(allTargets, h);
+  });
+  test("test email only", (done) => {
+    const h: IHandlers = {
+      onError: (e: any) => {
+        // this should not be called
+        expect(e).toBeNull();
+        done();
+      },
+      onDeviceRegistered: (customerId: string, modelId: string, serialNumber: string,  message: any) => {
+        expect(customerId).toEqual(constants.customerId);
+        expect(modelId).toEqual(constants.modelId);
+        expect(serialNumber).toEqual(constants.serial);
+        expect(message).not.toBeNull();
+        expect(message).not.toEqual({});
+        done();
+      }
+    };
+    receiveRequest(emailOnly, h);
+  });
+  test("test http only", (done) => {
+    const h: IHandlers = {
+      onError: (e: any) => {
+        // this should not be called
+        expect(e).toBeNull();
+        done();
+      },
+      onDeviceRegistered: (customerId: string, modelId: string, serialNumber: string,  message: any) => {
+        expect(customerId).toEqual(constants.customerId);
+        expect(modelId).toEqual(constants.modelId);
+        expect(serialNumber).toEqual(constants.serial);
+        expect(message).not.toBeNull();
+        expect(message).not.toEqual({});
+        done();
+      }
+    };
+    receiveRequest(httpOnly, h);
+  });
+  test("test https only", (done) => {
+    const h: IHandlers = {
+      onError: (e: any) => {
+        // this should not be called
+        expect(e).toBeNull();
+        done();
+      },
+      onDeviceRegistered: (customerId: string, modelId: string, serialNumber: string,  message: any) => {
+        expect(customerId).toEqual(constants.customerId);
+        expect(modelId).toEqual(constants.modelId);
+        expect(serialNumber).toEqual(constants.serial);
+        expect(message).not.toBeNull();
+        expect(message).not.toEqual({});
+        done();
+      }
+    };
+    receiveRequest(httpsOnly, h);
   });
 });
