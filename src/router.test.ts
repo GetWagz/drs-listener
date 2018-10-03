@@ -8,8 +8,12 @@ import {
   orderPlacedNotification, 
   subscriptionChangedNotification,
   itemShippedNotification,
+
   invalidJsonNotification,
   invalidSignatureNotification,
+  notDRSNotification,
+  fakeAction,
+
   allTargets,
   httpOnly,
   httpsOnly,
@@ -211,7 +215,7 @@ describe("Invalid or missing calls", () => {
   });
 });
 
-describe("Bad JSON calls", () => {
+describe.only("Bad JSON calls, fake actions, or Non-DRS", () => {
   test("call with bad JSON", (done) => {
     const h: IHandlers = {
       onError: (e: any) => {
@@ -224,6 +228,49 @@ describe("Bad JSON calls", () => {
       }
     };
     receiveRequest(invalidJsonNotification, h);
+  });
+  test("call with fake action", (done) => {
+    const h: IHandlers = {
+      onError: (e: any) => {
+        expect(e).not.toBeNull();
+        expect(e).toHaveProperty("code");
+        expect(e).toHaveProperty("reason");
+        expect(e.code).toEqual("unknown_message");
+        expect(e.reason).toEqual(errorCodes[e.code]);
+        done();
+      }
+    };
+    receiveRequest(fakeAction, h);
+  });
+  test.only("call with non-DRS error", (done) => {
+    const h: IHandlers = {
+      onError: (e: any) => {
+        expect(e).not.toBeNull();
+        expect(e).toHaveProperty("code");
+        expect(e).toHaveProperty("reason");
+        expect(e.code).toEqual("not_drs");
+        expect(e.reason).toEqual(errorCodes[e.code]);
+        expect(e.raw).toBe(notDRSNotification);
+        done();
+      }
+    };
+    receiveRequest(notDRSNotification, h);
+  });
+  test("call with non-DRS callback", (done) => {
+    const h: IHandlers = {
+      onError: (e: any) => {
+        // this should not be called
+        expect(false).toBeTruthy();
+        done();
+      },
+      onNonDRSMessage: (parsed: any) => {
+        expect(parsed).not.toBe({});
+        expect(parsed).not.toBeNull();
+        expect(parsed).toBe(notDRSNotification);
+        done();
+      }
+    };
+    receiveRequest(notDRSNotification, h);
   });
 });
 

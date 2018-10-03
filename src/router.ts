@@ -37,6 +37,7 @@ export interface IProductInfo {
 
 export interface IHandlers {
   onError: (error: IError | null) => any;
+  onNonDRSMessage?: (message: any) => any;
   onDeviceDeregistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
   onDeviceRegistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
   onItemShippedNotification?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
@@ -58,6 +59,7 @@ export const errorCodes = {
   "invalid_json": "we could not parse the json of the message",
   "invalid_signature": "invalid signature for the incoming message",
   "missing_handler": "missing the handler to handle that notification",
+  "not_drs": "this is not a DRS message, we placed it back into the raw property",
   "unknown_message": "unknown message type received"
 };
 
@@ -117,6 +119,18 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
         };
         return handlers.onError(messageUnknownError);
       }
+    } else {
+      // this is likely a non-DRS message, so check for the non-drs handler
+      // otherwise, on the error it goes
+      if(handlers.onNonDRSMessage){
+        return handlers.onNonDRSMessage(parsed);
+      }
+      const drsErr: IError = {
+        code: "not_drs",
+        reason: errorCodes.not_drs,
+        raw: parsed
+      };
+      return handlers.onError(drsErr);
     }
 
     // now parse it 
@@ -183,13 +197,5 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
       missingHandlerError.raw.handler = "onSubscriptionChanged";
       return handlers.onError(missingHandlerError);
     }
-
-    // nothing was found and somehow it missed the known types
-    const e: IError = {
-      code: "unknown_message",
-      reason: errorCodes.unknown_message,
-      raw: err
-    };
-    return handlers.onError(e);
   });
 };

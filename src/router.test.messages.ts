@@ -162,3 +162,29 @@ export const httpsOnly = {
   "SigningCertURL" : "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
   "UnsubscribeURL" : "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-2:989023162453:sampletopic:2dd82f5e-74ed-4a8c-9018-30f27207a3a9"
 };
+
+export const notDRSNotification = {
+  "Type" : "Notification",
+  "MessageId" : "6ebc1a3e-58e3-54ab-aaa9-4e114233bfdc",
+  "TopicArn" : "arn:aws:sns:us-east-2:989023162453:sampletopic",
+  "Subject" : "NonDRS Message",
+  "Message" : "{\"foo\": \"bar\"}",
+  "Timestamp" : "2018-10-03T19:29:20.931Z",
+  "SignatureVersion" : "1",
+  "Signature" : "fOovA8yk/CfZsoTvK7aC0Xue588enQjBY+BtiRWt1jW5U/j2YtgZbIEhptyUZZyC1nsU6spG+eyi83s3Ki/uDIlbkw+5aZl2rY+qLWWvkDmpS6Wi4YA2XbQY+D/OQsVvudDclbZEN8mHFZZm8ISudWi7kD388sXFoMC3EbIv/sHrcf4Klt78DxvRzjlo21eJMN6OIuehCroBWIsrwBymxnsamSwvGerMd91SC32qaYI1IkK4i4ujzV5+rgK96XG/uyJzZGBIexf9ea2BXAkPeeHQmMhDs7lH7cP4Ftw1Ha0Q4OF7qRsJpyXRYRcsPdkNLjyxSoVeOldeu8fBLWQRFw==",
+  "SigningCertURL" : "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+  "UnsubscribeURL" : "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-2:989023162453:sampletopic:2dd82f5e-74ed-4a8c-9018-30f27207a3a9"
+};
+
+export const fakeAction = {
+  "Type" : "Notification",
+  "MessageId" : "85e7f347-9c5b-56cb-bc24-a7688588d09a",
+  "TopicArn" : "arn:aws:sns:us-east-2:989023162453:sampletopic",
+  "Subject" : "New Action",
+  "Message" : "{\"notificationInfo\": {\"notificationType\": \"ANewMadeUpNotification\",\"notificationTime\": \"2018-08-13T21:57:05.320Z\",\"notificationId\": \"amzn1.dash.notification.v1.d2a35dc6-9c23-4898-9772-ba8d883ff271\",\"version\": \"2015-06-05\"},\"deviceInfo\": {\"deviceIdentifier\": {\"serialNumber\": \"1122334455\"},\"productIdentifier\": {\"modelId\": \"Testing_DRS_Testing\"}},\"customerInfo\": {\"directedCustomerId\": \"amzn1.account.FAKETEST\"},\"orderInfo\": {\"instanceId\": \"amzn1.dash.v2.o.fakeorder\",\"slotId\": \"slot-fake-slot\"}}",
+  "Timestamp" : "2018-10-03T19:25:07.381Z",
+  "SignatureVersion" : "1",
+  "Signature" : "ep75ZhTfMNNeORvmgdELi3lEfLYXvld3yvnPzafdmLnJQ4mUpMPWtVTXQmOoJzjswSa+w/JUUi9HDzdyO/R4/5n7xubCODIywoMOxSRBfTuwvphfDMG9uye/0hZ35rmKmAzkNk6SspL3Rg4kkADjspENtXlD1ksucp2lAV54Q5a95IVuiuedF5xHN5T1F5eXFcyahdkWrieWGwki1UuyrXCviXR/PQbhMqKcfA5q8xApthUnNPwGRvvifjr+feFlUBdEbb4pZdfYYO8A9cp/c0NH7bh37aUz+e4kaFdYz8oCb4BI8DbNgLhb6fstgC6uYxgzoweU2kv0lN7dHOEN0A==",
+  "SigningCertURL" : "https://sns.us-east-2.amazonaws.com/SimpleNotificationService-ac565b8b1a6c5d002d285f9598aa1d9b.pem",
+  "UnsubscribeURL" : "https://sns.us-east-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-2:989023162453:sampletopic:2dd82f5e-74ed-4a8c-9018-30f27207a3a9"
+};
