@@ -77,6 +77,8 @@ Pull Requests are welcome! See our `CONTRIBUTING.md` file for more information.
 
 ## Remaining TODOs
 
+[ ] Break receiveMessage into separate calls for each notification
+
 [ ] Improve documentation
 
 [ ] Integrate with automated checks (CI/CD, etc)
@@ -84,3 +86,5 @@ Pull Requests are welcome! See our `CONTRIBUTING.md` file for more information.
 [ ] More tests
 
 [ ] Build promise-based method
+
+[ ] Improve type checking

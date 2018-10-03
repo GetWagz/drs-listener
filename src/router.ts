@@ -38,14 +38,20 @@ export interface IHandlers {
   onError: (error: IBodyError | null) => any;
   onDeviceDeregistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
   onDeviceRegistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
+  onItemShippedNotification?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
+  onOrderCancelled?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
   onOrderPlaced?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
+  onSubscriptionChanged?: (customerId: string, modelId: string, serialNumber: string, subscriptionInfo: any, raw?: object) => any;
 }
 
 // represents the currently known message types
 const knownMessageTypes = [
   "DeviceDeregisteredNotification",
   "DeviceRegisteredNotification",
-  "OrderPlacedNotification"];
+  "ItemShippedNotification",
+  "OrderCancelledNotification",
+  "OrderPlacedNotification",
+  "SubscriptionChangedNotification"];
 
 /**
  * Takes in an Express request object
@@ -84,6 +90,8 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
         return handlers.onError(messageUnknownError);
       }
     }
+
+    // now parse it 
     const serialNumber = message.deviceInfo.deviceIdentifier.serialNumber;
     const modelId = message.deviceInfo.productIdentifier.modelId;
     const messageType = message.notificationInfo.notificationType;
@@ -101,6 +109,26 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
         return handlers.onDeviceRegistered(customerId, modelId, serialNumber, message);
       }
       return handlers.onError(null);
+    } else if(messageType === "ItemShippedNotification"){
+      if(handlers.onItemShippedNotification){
+        const orderInfo: IOrderInfo = {
+          instanceId: message.orderInfo.instanceId ? message.orderInfo.instanceId : "",
+          slotId: message.orderInfo.slotId ? message.orderInfo.slotId : "",
+          productInfo: message.orderInfo.productInfo
+        };
+        return handlers.onItemShippedNotification(customerId, modelId, serialNumber, orderInfo, message);
+      }
+      return handlers.onError(null);
+    } else if(messageType === "OrderCancelledNotification"){
+      if(handlers.onOrderCancelled){
+        const orderInfo: IOrderInfo = {
+          instanceId: message.orderInfo.instanceId ? message.orderInfo.instanceId : "",
+          slotId: message.orderInfo.slotId ? message.orderInfo.slotId : "",
+          productInfo: [] // no product info on an order cancelled notification
+        };
+        return handlers.onOrderCancelled(customerId, modelId, serialNumber, orderInfo, message);
+      }
+      return handlers.onError(null);
     } else if(messageType === "OrderPlacedNotification"){
       if(handlers.onOrderPlaced){
         const orderInfo: IOrderInfo = {
@@ -111,7 +139,15 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
         return handlers.onOrderPlaced(customerId, modelId, serialNumber, orderInfo, message);
       }
       return handlers.onError(null);
+    } else if(messageType === "SubscriptionChangedNotification"){
+      if(handlers.onSubscriptionChanged){
+        const subscriptionInfo = message.subscriptionInfo ? message.subscriptionInfo : {};
+        return handlers.onSubscriptionChanged(customerId, modelId, serialNumber, subscriptionInfo.slotsSubscriptionStatus, message);
+      }
+      return handlers.onError(null);
     }
+
+    // nothing was found
     const e: IBodyError = {
       reason: "unknown message",
       raw: err
