@@ -1,4 +1,4 @@
-import { receiveRequest } from "./";
+import { IHandlers, receiveRequest } from "./";
 
 import { deviceDeregisteredNotification } from "./router.test.messages";
 
@@ -19,5 +19,4 @@ test("test incoming parsed body", (done) => {
     }
   };
   receiveRequest(deviceDeregisteredNotification, h);
-
 });
