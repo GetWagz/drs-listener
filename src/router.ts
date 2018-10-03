@@ -3,12 +3,18 @@ import * as MessageValidator from "sns-validator";
 
 const validator = new MessageValidator();
 
+/**
+ * Represents an error from the system
+ */
 interface IError {
   reason: string;
   code?: string;
   raw: any;
 }
 
+/**
+ * Represents an incoming notification from SNS
+ */
 interface IBodySNS {
   Type: string;
   MessageId: string;
@@ -22,12 +28,18 @@ interface IBodySNS {
   UnsubscribeURL: string;
 }
 
+/**
+ * Represents a specific order
+ */
 export interface IOrderInfo {
   instanceId: string;
   slotId: string;
   productInfo: IProductInfo[] | [];
 }
 
+/**
+ * Represents a product on an order
+ */
 export interface IProductInfo {
   asin: string;
   quantity?: string;
@@ -35,6 +47,9 @@ export interface IProductInfo {
   estimatedDeliveryDate?: string;
 }
 
+/**
+ * The handlers for each message type
+ */
 export interface IHandlers {
   onError: (error: IError | null) => any;
   onNonDRSMessage?: (message: any) => any;
@@ -46,7 +61,9 @@ export interface IHandlers {
   onSubscriptionChanged?: (customerId: string, modelId: string, serialNumber: string, subscriptionInfo: any, raw?: object) => any;
 }
 
-// represents the currently known message types
+/**
+ * represents the currently known message types
+ */
 const knownMessageTypes = [
   "DeviceDeregisteredNotification",
   "DeviceRegisteredNotification",
@@ -55,6 +72,9 @@ const knownMessageTypes = [
   "OrderPlacedNotification",
   "SubscriptionChangedNotification"];
 
+  /**
+   * Represents the error codes
+   */
 export const errorCodes = {
   "invalid_json": "we could not parse the json of the message",
   "invalid_signature": "invalid signature for the incoming message",
@@ -71,11 +91,12 @@ const missingHandlerError: IError = {
 };
 
 /**
- * Takes in an Express request object
- * @param request
- * @param callback 
+ * Takes the SNS message, for example, from the Express req.body object
+ * @param body 
+ * @param handlers 
  */
 export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
+  // ensure the message is a valid message from SNS
   validator.validate(body, async (err: IError, parsed: IBodySNS) => {
     if(err){
       const validationError: IError = {
@@ -86,6 +107,7 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
       return handlers.onError(validationError);
     }
     
+    // parse the JSON
     let message: any = {}; 
     try{
       message = JSON.parse(parsed.Message);
@@ -97,6 +119,7 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
       };
       return handlers.onError(jsonError);
     }
+
     // there are a few ways this could get to us; we need to check
     // if the top key is default; if it is, the real message is a child
     // the same goes for email, http, or https
@@ -139,6 +162,8 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
     const messageType = message.notificationInfo.notificationType;
     const customerId = message.customerInfo.directedCustomerId;
 
+    // here is where we should break up the handling into different functions
+    // we could also switch on the messageType
     if(messageType === "DeviceDeregisteredNotification"){
       if(handlers.onDeviceDeregistered){
         return handlers.onDeviceDeregistered(customerId, modelId, serialNumber, message);
