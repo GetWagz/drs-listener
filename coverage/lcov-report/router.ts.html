@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for router.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> router.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">76.79% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>43/56</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">64.52% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>40/62</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>3/3</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">76.36% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>42/55</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+import * as MessageValidator from "sns-validator";
+&nbsp;
+const validator = new MessageValidator();
+&nbsp;
+interface IBodyError {
+  reason: string;
+  raw: any;
+}
+&nbsp;
+interface IBodySNS {
+  Type: string;
+  MessageId: string;
+  TopicArn: string;
+  Subject: string;
+  Message: string; // will need to be parsed into a JSON object
+  Timestamp: string;
+  SignatureVersion: string;
+  Signature: string;
+  SigningCertURL: string;
+  UnsubscribeURL: string;
+}
+&nbsp;
+export interface IOrderInfo {
+  instanceId: string;
+  slotId: string;
+  productInfo: IProductInfo[] | [];
+}
+&nbsp;
+export interface IProductInfo {
+  asin: string;
+  quantity?: string;
+  unit?: string;
+  estimatedDeliveryDate?: string;
+}
+&nbsp;
+export interface IHandlers {
+  onError: (error: IBodyError | null) =&gt; any;
+  onDeviceDeregistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) =&gt; any;
+  onDeviceRegistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) =&gt; any;
+  onItemShippedNotification?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) =&gt; any;
+  onOrderCancelled?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) =&gt; any;
+  onOrderPlaced?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) =&gt; any;
+  onSubscriptionChanged?: (customerId: string, modelId: string, serialNumber: string, subscriptionInfo: any, raw?: object) =&gt; any;
+}
+&nbsp;
+// represents the currently known message types
+const knownMessageTypes = [
+  "DeviceDeregisteredNotification",
+  "DeviceRegisteredNotification",
+  "ItemShippedNotification",
+  "OrderCancelledNotification",
+  "OrderPlacedNotification",
+  "SubscriptionChangedNotification"];
+&nbsp;
+/**
+ * Takes in an Express request object
+ * @param request
+ * @param callback 
+ */
+export const receiveRequest = (body: IBodySNS, handlers: IHandlers) =&gt; {
+  validator.validate(body, async (err: IBodyError, parsed: IBodySNS) =&gt; {
+    if(err){
+      const validationError: IBodyError = {
+        reason: "invalid signature",
+        raw: err
+      };
+      return handlers.onError(validationError);
+    }
+    let message = JSON.parse(parsed.Message);
+    // there are a few ways this could get to us; we need to check
+    // if the top key is default; if it is, the real message is a child
+    // the same goes for email, http, or https
+    if(message.default &amp;&amp; message.default.deviceInfo){
+      message = message.default;
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if(message.email &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >message.email.deviceInfo)</span>{
+<span class="cstat-no" title="statement not covered" >      message = message.email;</span>
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if(message.http &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >message.http.deviceInfo)</span>{
+<span class="cstat-no" title="statement not covered" >      message = message.http;</span>
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if(message.https &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >message.https.deviceInfo)</span>{
+<span class="cstat-no" title="statement not covered" >      message = message.https;</span>
+    } else <span class="missing-if-branch" title="else path not taken" >E</span>if(message.notificationInfo &amp;&amp; message.notificationInfo.notificationType){
+      // the method of delivery isn't the top level object
+      // so we check to see if the top level matches what we expect
+      <span class="missing-if-branch" title="if path not taken" >I</span>if(knownMessageTypes.indexOf(message.notificationInfo.notificationType) === -1){
+        const messageUnknownError: IBodyError = <span class="cstat-no" title="statement not covered" >{</span>
+          reason: "message unknown: " + message.notificationInfo.notificationType,
+          raw: message
+        };
+<span class="cstat-no" title="statement not covered" >        return handlers.onError(messageUnknownError);</span>
+      }
+    }
+&nbsp;
+    // now parse it 
+    const serialNumber = message.deviceInfo.deviceIdentifier.serialNumber;
+    const modelId = message.deviceInfo.productIdentifier.modelId;
+    const messageType = message.notificationInfo.notificationType;
+    // const messageTime = message.notificationInfo.notificationTime;
+    // const messageId = message.notificationInfo.notificationId;
+    const customerId = message.customerInfo.directedCustomerId;
+&nbsp;
+    if(messageType === "DeviceDeregisteredNotification"){
+      <span class="missing-if-branch" title="else path not taken" >E</span>if(handlers.onDeviceDeregistered){
+        return handlers.onDeviceDeregistered(customerId, modelId, serialNumber, message);
+      }
+<span class="cstat-no" title="statement not covered" >      return handlers.onError(null);</span>
+    } else if(messageType === "DeviceRegisteredNotification"){
+      <span class="missing-if-branch" title="else path not taken" >E</span>if(handlers.onDeviceRegistered){
+        return handlers.onDeviceRegistered(customerId, modelId, serialNumber, message);
+      }
+<span class="cstat-no" title="statement not covered" >      return handlers.onError(null);</span>
+    } else if(messageType === "ItemShippedNotification"){
+      <span class="missing-if-branch" title="else path not taken" >E</span>if(handlers.onItemShippedNotification){
+        const orderInfo: IOrderInfo = {
+          instanceId: message.orderInfo.instanceId ? message.orderInfo.instanceId : <span class="branch-1 cbranch-no" title="branch not covered" >"",</span>
+          slotId: message.orderInfo.slotId ? message.orderInfo.slotId : <span class="branch-1 cbranch-no" title="branch not covered" >"",</span>
+          productInfo: message.orderInfo.productInfo
+        };
+        return handlers.onItemShippedNotification(customerId, modelId, serialNumber, orderInfo, message);
+      }
+<span class="cstat-no" title="statement not covered" >      return handlers.onError(null);</span>
+    } else if(messageType === "OrderCancelledNotification"){
+      <span class="missing-if-branch" title="else path not taken" >E</span>if(handlers.onOrderCancelled){
+        const orderInfo: IOrderInfo = {
+          instanceId: message.orderInfo.instanceId ? message.orderInfo.instanceId : <span class="branch-1 cbranch-no" title="branch not covered" >"",</span>
+          slotId: message.orderInfo.slotId ? message.orderInfo.slotId : <span class="branch-1 cbranch-no" title="branch not covered" >"",</span>
+          productInfo: [] // no product info on an order cancelled notification
+        };
+        return handlers.onOrderCancelled(customerId, modelId, serialNumber, orderInfo, message);
+      }
+<span class="cstat-no" title="statement not covered" >      return handlers.onError(null);</span>
+    } else if(messageType === "OrderPlacedNotification"){
+      <span class="missing-if-branch" title="else path not taken" >E</span>if(handlers.onOrderPlaced){
+        const orderInfo: IOrderInfo = {
+          instanceId: message.orderInfo.instanceId ? message.orderInfo.instanceId : <span class="branch-1 cbranch-no" title="branch not covered" >"",</span>
+          slotId: message.orderInfo.slotId ? message.orderInfo.slotId : <span class="branch-1 cbranch-no" title="branch not covered" >"",</span>
+          productInfo: message.orderInfo.productInfo
+        };
+        return handlers.onOrderPlaced(customerId, modelId, serialNumber, orderInfo, message);
+      }
+<span class="cstat-no" title="statement not covered" >      return handlers.onError(null);</span>
+    } else <span class="missing-if-branch" title="else path not taken" >E</span>if(messageType === "SubscriptionChangedNotification"){
+      <span class="missing-if-branch" title="else path not taken" >E</span>if(handlers.onSubscriptionChanged){
+        const subscriptionInfo = message.subscriptionInfo ? message.subscriptionInfo : <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
+        return handlers.onSubscriptionChanged(customerId, modelId, serialNumber, subscriptionInfo.slotsSubscriptionStatus, message);
+      }
+<span class="cstat-no" title="statement not covered" >      return handlers.onError(null);</span>
+    }
+&nbsp;
+    // nothing was found
+    const e: IBodyError = <span class="cstat-no" title="statement not covered" >{</span>
+      reason: "unknown message",
+      raw: err
+    };
+<span class="cstat-no" title="statement not covered" >    return handlers.onError(e);</span>
+  });
+};</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Oct 03 2018 14:09:27 GMT-0400 (Eastern Daylight Time)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>

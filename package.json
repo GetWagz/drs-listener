@@ -7,6 +7,7 @@
   "scripts": {
     "build": "./node_modules/typescript/bin/tsc",
     "test": "./node_modules/jest/bin/jest.js",
+    "cover": "./node_modules/jest/bin/jest.js --coverage",
     "test-watch": "./node_modules/jest/bin/jest.js jest --watch",
     "prepublish": "npm run build",
     "lint": "./node_modules/tslint/bin/tslint  -c tslint.json src/**/*.ts"
