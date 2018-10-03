@@ -8,7 +8,7 @@ interface IBodyError {
   raw: any;
 }
 
-interface IBodySNSInterface {
+interface IBodySNS {
   Type: string;
   MessageId: string;
   TopicArn: string;
@@ -21,19 +21,39 @@ interface IBodySNSInterface {
   UnsubscribeURL: string;
 }
 
+export interface IOrderInfo {
+  instanceId: string;
+  slotId: string;
+  productInfo: IProductInfo[] | [];
+}
+
+export interface IProductInfo {
+  asin: string;
+  quantity?: string;
+  unit?: string;
+  estimatedDeliveryDate?: string;
+}
+
 export interface IHandlers {
   onError: (error: IBodyError | null) => any;
   onDeviceDeregistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
+  onDeviceRegistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
+  onOrderPlaced?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
 }
 
+// represents the currently known message types
+const knownMessageTypes = [
+  "DeviceDeregisteredNotification",
+  "DeviceRegisteredNotification",
+  "OrderPlacedNotification"];
 
 /**
  * Takes in an Express request object
  * @param request
  * @param callback 
  */
-export const receiveRequest = (body: IBodySNSInterface, handlers: IHandlers) => {
-  validator.validate(body, async (err: IBodyError, parsed: IBodySNSInterface) => {
+export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
+  validator.validate(body, async (err: IBodyError, parsed: IBodySNS) => {
     if(err){
       const validationError: IBodyError = {
         reason: "invalid signature",
@@ -53,6 +73,16 @@ export const receiveRequest = (body: IBodySNSInterface, handlers: IHandlers) => 
       message = message.http;
     } else if(message.https && message.https.deviceInfo){
       message = message.https;
+    } else if(message.notificationInfo && message.notificationInfo.notificationType){
+      // the method of delivery isn't the top level object
+      // so we check to see if the top level matches what we expect
+      if(knownMessageTypes.indexOf(message.notificationInfo.notificationType) === -1){
+        const messageUnknownError: IBodyError = {
+          reason: "message unknown: " + message.notificationInfo.notificationType,
+          raw: message
+        };
+        return handlers.onError(messageUnknownError);
+      }
     }
     const serialNumber = message.deviceInfo.deviceIdentifier.serialNumber;
     const modelId = message.deviceInfo.productIdentifier.modelId;
@@ -64,6 +94,21 @@ export const receiveRequest = (body: IBodySNSInterface, handlers: IHandlers) => 
     if(messageType === "DeviceDeregisteredNotification"){
       if(handlers.onDeviceDeregistered){
         return handlers.onDeviceDeregistered(customerId, modelId, serialNumber, message);
+      }
+      return handlers.onError(null);
+    } else if(messageType === "DeviceRegisteredNotification"){
+      if(handlers.onDeviceRegistered){
+        return handlers.onDeviceRegistered(customerId, modelId, serialNumber, message);
+      }
+      return handlers.onError(null);
+    } else if(messageType === "OrderPlacedNotification"){
+      if(handlers.onOrderPlaced){
+        const orderInfo: IOrderInfo = {
+          instanceId: message.orderInfo.instanceId ? message.orderInfo.instanceId : "",
+          slotId: message.orderInfo.slotId ? message.orderInfo.slotId : "",
+          productInfo: message.orderInfo.productInfo
+        };
+        return handlers.onOrderPlaced(customerId, modelId, serialNumber, orderInfo, message);
       }
       return handlers.onError(null);
     }
