@@ -215,7 +215,7 @@ describe("Invalid or missing calls", () => {
   });
 });
 
-describe.only("Bad JSON calls, fake actions, or Non-DRS", () => {
+describe("Bad JSON calls, fake actions, or Non-DRS", () => {
   test("call with bad JSON", (done) => {
     const h: IHandlers = {
       onError: (e: any) => {
@@ -242,7 +242,7 @@ describe.only("Bad JSON calls, fake actions, or Non-DRS", () => {
     };
     receiveRequest(fakeAction, h);
   });
-  test.only("call with non-DRS error", (done) => {
+  test("call with non-DRS error", (done) => {
     const h: IHandlers = {
       onError: (e: any) => {
         expect(e).not.toBeNull();
