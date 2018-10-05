@@ -51,13 +51,23 @@ export interface IProductInfo {
  * The handlers for each message type
  */
 export interface IHandlers {
+  // called if there is an error
   onError: (error: IError | null) => any;
+  // should only be used if all you care about is validating as no other handlers will be called
+  onOnlyValidateMessage?: (message: any) => any;
+  // called when the parsed message is a non-DRS message
   onNonDRSMessage?: (message: any) => any;
+  // called when a device is deregistered
   onDeviceDeregistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
+  // called when a device is registered
   onDeviceRegistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
+  // called when an item is shipped
   onItemShippedNotification?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
+  // called when an item order is cancelled
   onOrderCancelled?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
+  // called when an order is placed
   onOrderPlaced?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
+  // called when a subscription changes
   onSubscriptionChanged?: (customerId: string, modelId: string, serialNumber: string, subscriptionInfo: any, raw?: object) => any;
 }
 
@@ -222,5 +232,49 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
       missingHandlerError.raw.handler = "onSubscriptionChanged";
       return handlers.onError(missingHandlerError);
     }
+  });
+};
+
+export const validate = (message: any, handlers?: IHandlers, callback?: (err: any, message: any) => any): Promise<any> | any => {
+  // if there are no handlers and no call back, then it's a promise they desire
+  const isPromise = (handlers === null || handlers === undefined) && (callback === null || callback === undefined);
+  if(isPromise){
+    return new Promise((resolve, reject) => {
+      validator.validate(message, async (err: IError, parsed: IBodySNS) => {
+        if(err){
+          const validationError: IError = {
+            code: "invalid_signature",
+            reason: errorCodes.invalid_signature,
+            raw: err
+          };
+          return reject(validationError);
+        }
+        return resolve(parsed);
+      });
+    });
+  }
+  // not a promise, handle with call backs
+  validator.validate(message, async (err: IError, parsed: IBodySNS) => {
+    if(err){
+      const validationError: IError = {
+        code: "invalid_signature",
+        reason: errorCodes.invalid_signature,
+        raw: err
+      };
+      if(handlers && handlers.onError){
+        return handlers.onError(validationError);
+      } else if(callback){
+        return callback(validationError, message);
+      }
+      // should never get here if used correctly
+      return validationError;
+      
+    }
+    if(handlers && handlers.onOnlyValidateMessage){
+      return handlers.onOnlyValidateMessage(parsed);
+    } else if(callback){
+      return callback(null, parsed);
+    } 
+    return parsed;
   });
 };
