@@ -1,4 +1,4 @@
-# The DRS SNS Listsener
+# The DRS SNS Listener
 [![Build Status](https://travis-ci.org/GetWagz/drs-listener.svg?branch=develop)](https://travis-ci.org/GetWagz/drs-listener)
 
 This library will handle the DRS SNS messages that come in and pass the valid data to the call of your choice. This library is written in **Typescript** and targets ES2015 environments.
