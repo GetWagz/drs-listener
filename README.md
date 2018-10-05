@@ -1,4 +1,5 @@
-# The DRS SNS Listsener
+# The DRS SNS Listener
+[![Build Status](https://travis-ci.org/GetWagz/drs-listener.svg?branch=develop)](https://travis-ci.org/GetWagz/drs-listener)
 
 This library will handle the DRS SNS messages that come in and pass the valid data to the call of your choice. This library is written in **Typescript** and targets ES2015 environments.
 
@@ -26,7 +27,9 @@ If you are planning to develop against the project, we recommend you clone this 
 
 Due to a vaidation library used, the primary method is a callback. At some point we may create a promisified version but will give it a different name to preserve backwards compatibility.
 
-You would first want to create a "handlers" object that will hold all of the methods you want to call based upon a message. You can handles as many or as few notification types as you would like. It's also probably a good idea to specify a generic handler in case the message is invalid, cannot be parsed, or otherwise cannot be handled:
+You would first want to create a "handlers" object that will hold all of the methods you want to call based upon a message. You can handles as many or as few notification types as you would like. It's also probably a good idea to specify a generic handler in case the message is invalid, cannot be parsed, or otherwise cannot be handled
+
+### General Usage with Handlers
 
 ```ts
 import { IHandlers, receiveRequest } from "drs-listener";
@@ -39,6 +42,7 @@ const myHandlers: IHandlers = {
     // handle the device notification, optionally respond; remember, SNS is asynchronous and they will not
     // be listening for action responses
   }
+  // and any of the other handlers
 };
 ```
 
@@ -50,6 +54,22 @@ const incoming = req.body;
 receiveRequest(incoming, myHandlers);
 
 ```
+
+If you only care about handling validation of the message:
+
+```ts
+const h: IHandlers = {
+  onError: (e: any) => {
+    // handle the error; it's not valid
+  },
+  onOnlyValidateMessage: (message: any) => {
+    // called since since you used validate()
+  }
+};
+// validate only seeks to validate the message is a legitimate SNS message
+validate(invalidSignatureNotification, h);
+```
+
 
 ### Why this apporach?
 
@@ -76,6 +96,8 @@ Are you on the New Hampshire Seacoast and love Go, Typescript, Swift, or Java? S
 Pull Requests are welcome! See our `CONTRIBUTING.md` file for more information.
 
 ## Remaining TODOs
+
+[ ] Add option to subscribe to URL with boolean
 
 [ ] Break receiveMessage into separate calls for each notification
 

@@ -3,12 +3,18 @@ import * as MessageValidator from "sns-validator";
 
 const validator = new MessageValidator();
 
+/**
+ * Represents an error from the system
+ */
 interface IError {
   reason: string;
   code?: string;
   raw: any;
 }
 
+/**
+ * Represents an incoming notification from SNS
+ */
 interface IBodySNS {
   Type: string;
   MessageId: string;
@@ -22,12 +28,18 @@ interface IBodySNS {
   UnsubscribeURL: string;
 }
 
+/**
+ * Represents a specific order
+ */
 export interface IOrderInfo {
   instanceId: string;
   slotId: string;
   productInfo: IProductInfo[] | [];
 }
 
+/**
+ * Represents a product on an order
+ */
 export interface IProductInfo {
   asin: string;
   quantity?: string;
@@ -35,18 +47,33 @@ export interface IProductInfo {
   estimatedDeliveryDate?: string;
 }
 
+/**
+ * The handlers for each message type
+ */
 export interface IHandlers {
+  // called if there is an error
   onError: (error: IError | null) => any;
+  // should only be used if all you care about is validating as no other handlers will be called
+  onOnlyValidateMessage?: (message: any) => any;
+  // called when the parsed message is a non-DRS message
   onNonDRSMessage?: (message: any) => any;
+  // called when a device is deregistered
   onDeviceDeregistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
+  // called when a device is registered
   onDeviceRegistered?: (customerId: string, modelId: string, serialNumber: string, raw?: object) => any;
+  // called when an item is shipped
   onItemShippedNotification?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
+  // called when an item order is cancelled
   onOrderCancelled?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
+  // called when an order is placed
   onOrderPlaced?: (customerId: string, modelId: string, serialNumber: string, orderInfo: IOrderInfo, raw?: object) => any;
+  // called when a subscription changes
   onSubscriptionChanged?: (customerId: string, modelId: string, serialNumber: string, subscriptionInfo: any, raw?: object) => any;
 }
 
-// represents the currently known message types
+/**
+ * represents the currently known message types
+ */
 const knownMessageTypes = [
   "DeviceDeregisteredNotification",
   "DeviceRegisteredNotification",
@@ -55,6 +82,9 @@ const knownMessageTypes = [
   "OrderPlacedNotification",
   "SubscriptionChangedNotification"];
 
+  /**
+   * Represents the error codes
+   */
 export const errorCodes = {
   "invalid_json": "we could not parse the json of the message",
   "invalid_signature": "invalid signature for the incoming message",
@@ -71,11 +101,12 @@ const missingHandlerError: IError = {
 };
 
 /**
- * Takes in an Express request object
- * @param request
- * @param callback 
+ * Takes the SNS message, for example, from the Express req.body object
+ * @param body 
+ * @param handlers 
  */
 export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
+  // ensure the message is a valid message from SNS
   validator.validate(body, async (err: IError, parsed: IBodySNS) => {
     if(err){
       const validationError: IError = {
@@ -86,6 +117,7 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
       return handlers.onError(validationError);
     }
     
+    // parse the JSON
     let message: any = {}; 
     try{
       message = JSON.parse(parsed.Message);
@@ -97,6 +129,7 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
       };
       return handlers.onError(jsonError);
     }
+
     // there are a few ways this could get to us; we need to check
     // if the top key is default; if it is, the real message is a child
     // the same goes for email, http, or https
@@ -139,6 +172,8 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
     const messageType = message.notificationInfo.notificationType;
     const customerId = message.customerInfo.directedCustomerId;
 
+    // here is where we should break up the handling into different functions
+    // we could also switch on the messageType
     if(messageType === "DeviceDeregisteredNotification"){
       if(handlers.onDeviceDeregistered){
         return handlers.onDeviceDeregistered(customerId, modelId, serialNumber, message);
@@ -197,5 +232,45 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
       missingHandlerError.raw.handler = "onSubscriptionChanged";
       return handlers.onError(missingHandlerError);
     }
+  });
+};
+
+export const validate = (message: any, handlers?: IHandlers, callback?: (err: any, message: any) => any): Promise<any> | any => {
+  // if there are no handlers and no call back, then it's a promise they desire
+  const isPromise = (handlers === null || handlers === undefined) && (callback === null || callback === undefined);
+  if(isPromise){
+    return new Promise((resolve, reject) => {
+      validator.validate(message, async (err: IError, parsed: IBodySNS) => {
+        if(err){
+          const validationError: IError = {
+            code: "invalid_signature",
+            reason: errorCodes.invalid_signature,
+            raw: err
+          };
+          return reject(validationError);
+        }
+        return resolve(parsed);
+      });
+    });
+  }
+  // not a promise, handle with call backs
+  validator.validate(message, async (err: IError, parsed: IBodySNS) => {
+    if(err){
+      const validationError: IError = {
+        code: "invalid_signature",
+        reason: errorCodes.invalid_signature,
+        raw: err
+      };
+      if(handlers && handlers.onError){
+        return handlers.onError(validationError);
+      } else if(callback){
+        return callback(validationError, message);
+      }
+    }
+    if(handlers && handlers.onOnlyValidateMessage){
+      return handlers.onOnlyValidateMessage(parsed);
+    } else if(callback){
+      return callback(null, parsed);
+    } 
   });
 };
