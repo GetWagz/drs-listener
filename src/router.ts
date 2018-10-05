@@ -266,15 +266,11 @@ export const validate = (message: any, handlers?: IHandlers, callback?: (err: an
       } else if(callback){
         return callback(validationError, message);
       }
-      // should never get here if used correctly
-      return validationError;
-      
     }
     if(handlers && handlers.onOnlyValidateMessage){
       return handlers.onOnlyValidateMessage(parsed);
     } else if(callback){
       return callback(null, parsed);
     } 
-    return parsed;
   });
 };
