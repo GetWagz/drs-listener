@@ -1,4 +1,4 @@
-
+import * as request from "request";
 import * as MessageValidator from "sns-validator";
 
 const validator = new MessageValidator();
@@ -26,6 +26,7 @@ interface IBodySNS {
   Signature: string;
   SigningCertURL: string;
   UnsubscribeURL: string;
+  SubscribeURL?: string;
 }
 
 /**
@@ -34,7 +35,7 @@ interface IBodySNS {
 export interface IOrderInfo {
   instanceId: string;
   slotId: string;
-  productInfo: IProductInfo[] | [];
+  productInfo: IProductInfo[] | any[];
 }
 
 /**
@@ -90,7 +91,9 @@ export const errorCodes = {
   "invalid_signature": "invalid signature for the incoming message",
   "missing_handler": "missing the handler to handle that notification",
   "not_drs": "this is not a DRS message, we placed it back into the raw property",
-  "unknown_message": "unknown message type received"
+  "unknown_message": "unknown message type received",
+  "invalid_subscription_request": "could not confirm subscription due to malformed object or missing url",
+  "invalid_subscription_request_response": "could not confirm the subscription due to a remote error"
 };
 
 // used for handling errors related to non-specificed handlers in the handler object
@@ -115,6 +118,36 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
         raw: err
       };
       return handlers.onError(validationError);
+    }
+
+    // if this is a confirmation message, we want to confirm it immediately
+    // otherwise the rest will fail as the confirmation reques cannot be converted to JSON
+    // and the rest of the flow is fairly pointless
+    if(parsed.Type === "SubscriptionConfirmation"){
+      const url = parsed.SubscribeURL ? parsed.SubscribeURL : "";
+      if(url === ""){
+        const validationError: IError = {
+          code: "invalid_subscription_request",
+          reason: errorCodes.invalid_subscription_request,
+          raw: parsed
+        };
+        return handlers.onError(validationError);
+      }
+      // we need to do a get on the URL
+      return request(url, {}, (confirmErr, confirmResponse, confirmBody) => {
+        if(err !== null || confirmResponse.statusCode !== 200){
+          const validationError: IError = {
+            code: "invalid_subscription_request_response",
+            reason: errorCodes.invalid_subscription_request_response,
+            raw: {
+              err: confirmErr,
+              resp: confirmResponse,
+              body: confirmBody
+            }
+          };
+          return handlers.onError(validationError);
+        }
+      });
     }
     
     // parse the JSON
