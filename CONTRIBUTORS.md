@@ -24,6 +24,6 @@ We recommend you post your name as a ##, then a quick blurb about you, then your
 
 ## Erin Lewis
 
-* Geek, Taekwondo marital artist, friend
+* Geek, Taekwondo martial artist, friend
 
 * Salem, NH
