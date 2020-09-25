@@ -1,5 +1,8 @@
 # The DRS SNS Listener
+
 [![Build Status](https://travis-ci.org/GetWagz/drs-listener.svg?branch=develop)](https://travis-ci.org/GetWagz/drs-listener)
+
+**This package is based upon the pre-Alexa DRS implementation**
 
 This library will handle the DRS SNS messages that come in and pass the valid data to the call of your choice. This library is written in **Typescript** and targets ES2015 environments.
 
@@ -70,8 +73,7 @@ const h: IHandlers = {
 validate(invalidSignatureNotification, h);
 ```
 
-
-### Why this apporach?
+### Why this apporach
 
 This approach was developed to serve a specific use case for us. We had a DRS listener for one of our products. After some further development, a new business need arose and we needed to branch off and call a second API depending on the model and serial information. Rather than having conditionals in each of our handlers, we decided to create two handler objects that we could pass. This approach is not perfect, but served us well.
 
