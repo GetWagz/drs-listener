@@ -25,7 +25,7 @@
     "sns-validator": "^0.3.4"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.2",
+    "@types/jest": "^23.3.14",
     "@types/moment": "^2.13.0",
     "@types/request": "^2.47.1",
     "jest": "^23.6.0",

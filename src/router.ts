@@ -134,7 +134,7 @@ export const receiveRequest = (body: IBodySNS, handlers: IHandlers) => {
         return handlers.onError(validationError);
       }
       // we need to do a get on the URL
-      return request(url, {}, (confirmErr, confirmResponse, confirmBody) => {
+      return request(url, {}, (confirmErr: any, confirmResponse: any, confirmBody: any) => {
         if(err !== null || confirmResponse.statusCode !== 200){
           const validationError: IError = {
             code: "invalid_subscription_request_response",
