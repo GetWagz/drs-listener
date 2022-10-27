@@ -1,5 +1,7 @@
 # The DRS SNS Listener
 [![Build Status](https://travis-ci.org/GetWagz/drs-listener.svg?branch=develop)](https://travis-ci.org/GetWagz/drs-listener)
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/GetWagz/drs-listener/blob/master/LICENSE)
+[![Maintenance](https://img.shields.io/maintenance/no/2020)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 
 This library will handle the DRS SNS messages that come in and pass the valid data to the call of your choice. This library is written in **Typescript** and targets ES2015 environments.
 
@@ -25,7 +27,7 @@ If you are planning to develop against the project, we recommend you clone this 
 
 ## Using
 
-Due to a vaidation library used, the primary method is a callback. At some point we may create a promisified version but will give it a different name to preserve backwards compatibility.
+Due to a validation library used, the primary method is a callback. At some point we may create a promisified version but will give it a different name to preserve backwards compatibility.
 
 You would first want to create a "handlers" object that will hold all of the methods you want to call based upon a message. You can handles as many or as few notification types as you would like. It's also probably a good idea to specify a generic handler in case the message is invalid, cannot be parsed, or otherwise cannot be handled
 
