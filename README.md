@@ -1,9 +1,16 @@
 # The DRS SNS Listener
+
 [![Build Status](https://travis-ci.org/GetWagz/drs-listener.svg?branch=develop)](https://travis-ci.org/GetWagz/drs-listener)
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/GetWagz/drs-listener/blob/master/LICENSE)
 [![Maintenance](https://img.shields.io/maintenance/no/2020)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 
 This library will handle the DRS SNS messages that come in and pass the valid data to the call of your choice. This library is written in **Typescript** and targets ES2015 environments.
+
+## Deprecation and Maintenance
+
+Unfortunately, this repository is no longer being maintained. If you would like to take over maintenance of the repository, please open up an issue in this repository or otherwise contact us. We apologize if this is an inconvenience at all. We are going to freeze this archive. Feel free to fork it as you desire. Best of luck!
+
+## Overview
 
 [Dash Replenishment Service (DRS)](https://developer.amazon.com/dash-replenishment-service) is an Amazon automatic replenishment system that makes automatically replenishing supplies easy. At Wagz, we use to replenish food for our automatic feeders. You can learn more about them at our website, [Wagz.Com](https://www.wagz.com).
 
@@ -72,8 +79,7 @@ const h: IHandlers = {
 validate(invalidSignatureNotification, h);
 ```
 
-
-### Why this apporach?
+### Why this approach?
 
 This approach was developed to serve a specific use case for us. We had a DRS listener for one of our products. After some further development, a new business need arose and we needed to branch off and call a second API depending on the model and serial information. Rather than having conditionals in each of our handlers, we decided to create two handler objects that we could pass. This approach is not perfect, but served us well.
 
@@ -91,7 +97,7 @@ We at Wagz decided to open source this part of our application, but are in the p
 
 ## Hiring
 
-Are you on the New Hampshire Seacoast and love Go, Typescript, Swift, or Java? Send an email to engineering@wagz.com and let's find out if we're a good match!
+Are you on the New Hampshire Seacoast and love Go, Typescript, Swift, or Java? Send an email to [engineering@wagz.com](engineering@wagz.com) and let's find out if we're a good match!
 
 ## Contributing
 
